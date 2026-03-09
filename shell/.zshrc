@@ -87,11 +87,6 @@ export LOCAL_BIGTABLE_EMULATOR_HOST=localhost:8086
 # Ollama
 export OLLAMA_HOST="127.0.0.1:5000"
 
-# AIChat
-export AICHAT_CONFIG_DIR="$HOME/.aichat"
-export AICHAT_SESSIONS_DIR="$HOME/workspace/shipt/ai/aichat/sessions"
-export AICHAT_MESSAGES_FILE="$HOME/workspace/shipt/ai/aichat/history/messages.md"
-
 # =============================================================================
 # PATH CONFIGURATION
 # =============================================================================
@@ -100,7 +95,7 @@ export AICHAT_MESSAGES_FILE="$HOME/workspace/shipt/ai/aichat/history/messages.md
 export PATH="$HOME/.local/bin:$PATH"
 
 # Consolidated system PATH
-export PATH="/usr/local/bin/:$HOME/.local/bin/bin/:/usr/local/opt/libpq/bin:/opt/homebrew/bin:$JAVA_HOME:/usr/local/bin:$POETRY_HOME:$KAFKA_HOME/bin:$GOPATH/bin:$GOROOT/bin:${HOME}/.shipt:$PATH"
+export PATH="/usr/local/bin/:$HOME/.local/bin/bin/:/usr/local/opt/libpq/bin:/opt/homebrew/bin:$JAVA_HOME:/usr/local/bin:$POETRY_HOME:$KAFKA_HOME/bin:$GOPATH/bin:$GOROOT/bin:$PATH"
 
 # =============================================================================
 # SHELL COMPLETIONS & INTEGRATIONS
