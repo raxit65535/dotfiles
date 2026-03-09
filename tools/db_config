@@ -1,0 +1,139 @@
+#!/bin/sh
+
+# Database connection helper functions
+
+# ============================================================================================================
+# PostgreSQL connection Configuration
+# ============================================================================================================
+
+
+# Database connection with IAM Auth
+export IAMPGAUTH=$(gcloud sql generate-login-token)
+# note: export IAM_DB_USER in zshrc to avoid hardcoding in this file
+
+_pg_args () {
+    # default to staging environment and usql client if not provided
+    DB_ENV=${1:-stg}
+    DB_CLIENT=${2:-usql}
+}
+
+# Base connection function
+_pg_connect() {
+    local host=$1
+    local dbname=$2
+
+    local url="postgres://$IAM_DB_USER:$IAMPGAUTH@${host}:5432/${dbname}"
+
+    case $DB_CLIENT in
+        pgcli)
+            pgcli "$url"
+            ;;
+        psql)
+            psql "$url"
+            ;;
+        usql)
+            usql "$url"
+            ;;
+        *)
+            echo "Unknown client: $DB_CLIENT. Supported: pgcli, psql, usql"
+            return 1
+            ;;
+    esac
+}
+
+# local postgres connection
+local_db() {
+    _pg_args  "$@"
+
+    local url ="postgres://pguser:pgpass@localhost:9001/postgres"
+
+    case $DB_CLIENT in
+        pgcli)
+            pgcli "$url"
+            ;;
+        psql)
+            psql "$url"
+            ;;
+        usql)
+            usql "$url"
+            ;;
+        *)
+            echo "Unknown client: $DB_CLIENT. Supported: pgcli, psql, usql"
+            return 1
+            ;;
+    esac
+}
+
+# Remote Database connection functions
+# Example usage: remote_database_connection prd pgcli
+# Extend this function to include more remote databases as needed
+
+remote_database_connection() {
+    _pg_args  "$@"
+
+    if [ "$DB_ENV" = "prd" ]; then
+        _pg_connect "remote.database.host.com" "prd_remote_db"
+    else
+        _pg_connect "remote.database.stg.host.com" "stg_remote_db"
+    fi
+}
+
+
+# ============================================================================================================
+# CBT CLI connection Configuration for Google Cloud Bigtable
+# ============================================================================================================
+
+local_cbt() {
+  cbt -project local-project -instance local-instance "$@"
+}
+
+# Connect to remote bigtable instance
+remote_bt_connection() {
+  cbt -project bigtable-project-id -instance bigtable-instance-id "$@"
+}
+
+# JSON formatter for piping
+cbt-json() {
+  grep { | jq -c '. | fromjson' | jq
+}
+
+# ============================================================================================================
+# ClickHouse Connection Configuration
+# ============================================================================================================
+
+# Simple ClickHouse terminal connectors (HTTP/HTTPS via clickhouse-cli)
+clickhouse_local() {
+  usql "clickhouse://default@localhost:8123/default"
+}
+
+# ============================================================================================================
+# DuckDB Connection Configuration
+# ============================================================================================================
+
+duck_local () {
+  local mode="${1:-duckdb}"
+
+  mkdir -p /tmp/duckdb
+  local db="/tmp/duckdb/local.duckdb"
+  local dsn="duckdb:///tmp/duckdb_local.db"
+
+  # Run setup once before opening an interactive session (works for both tools)
+  # Note: CREATE SECRET is idempotent with OR REPLACE.
+  local setup_sql="INSTALL gcs FROM community;
+      LOAD gcs;
+      CREATE OR REPLACE SECRET gcs_adc (
+        TYPE gcp,
+        PROVIDER credential_chain
+      );
+    "
+
+  if [[ "$mode" == "duckdb" ]]; then
+    duckdb "$db" -cmd "$setup_sql"
+    duckdb "$db"
+  else
+    usql "$dsn" -c "$setup_sql" >/dev/null
+    usql "$dsn"
+  fi
+}
+
+

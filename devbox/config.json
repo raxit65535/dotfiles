@@ -1,0 +1,110 @@
+{
+  "dotfiles_root": "../",
+  "bigdata_dir": "~/bigdata",
+  "machine_profile": "work",
+  "install": {
+    "git": true,
+    "oh_my_zsh": true,
+    "python_pyenv": true,
+    "golang": true,
+    "rust": true,
+    "nodejs": true,
+    "postgres": true,
+    "containers": true,
+    "kubernetes": true,
+    "google_cloud_sdk": true,
+    "java": true,
+    "bigdata": true,
+    "tmux": true,
+    "neovim": true,
+    "vscode": true,
+    "intellij": true,
+    "zed": true,
+    "browsers": true,
+    "zoom": true,
+    "iterm2": true,
+    "bruno": true
+  },
+  "symlinks": [
+    {
+      "name": "zshrc",
+      "source": "shell/.zshrc",
+      "target": "~/.zshrc",
+      "profiles": ["global", "work"]
+    },
+    {
+      "name": "aliases",
+      "source": "shell/.aliases",
+      "target": "~/.aliases",
+      "profiles": ["global", "work"]
+    },
+    {
+      "name": "gitconfig",
+      "source": "git/.gitconfig",
+      "target": "~/.gitconfig",
+      "profiles": ["global", "work"]
+    },
+    {
+      "name": "gitconfig-raxit65535",
+      "source": "git/.gitconfig-raxit65535",
+      "target": "~/.gitconfig-raxit65535",
+      "profiles": ["global", "work"]
+    },
+    {
+      "name": "tmux_conf",
+      "source": "tmux/.tmux.conf",
+      "target": "~/.tmux.conf",
+      "profiles": ["global", "work"]
+    },
+    {
+      "name": "nvim_config",
+      "source": "nvim",
+      "target": "~/.config/nvim",
+      "profiles": ["global", "work"]
+    },
+    {
+      "name": "vscode_settings_macos",
+      "source": "vscode/settings.json",
+      "target": "~/Library/Application Support/Code/User/settings.json",
+      "platforms": ["macos"],
+      "profiles": ["global", "work"]
+    },
+    {
+      "name": "vscode_settings_linux",
+      "source": "vscode/settings.json",
+      "target": "~/.config/Code/User/settings.json",
+      "platforms": ["ubuntu"],
+      "profiles": ["global", "work"]
+    },
+    {
+      "name": "gitconfig-shipt",
+      "source": "work/.gitconfig-shipt",
+      "target": "~/.gitconfig-shipt",
+      "profiles": ["work"]
+    },
+    {
+      "name": "sf_connection.toml",
+      "source": "work/.sf_connection.toml",
+      "target": "~/.snowflake/connections.toml",
+      "profiles": ["work"]
+    },
+    {
+      "name": "db_config",
+      "source": "work/.shipt_db_config",
+      "target": "~/.shipt_db_config",
+      "profiles": ["work"]
+    },
+    {
+      "name": "kafka_config",
+      "source": "work/.kafka_config",
+      "target": "~/.kafka_config",
+      "profiles": ["work"]
+    },
+    {
+      "name": "zprofile",
+      "source": "work/.zprofile",
+      "target": "~/.zprofile",
+      "profiles": ["work"]
+    }
+  ]
+}

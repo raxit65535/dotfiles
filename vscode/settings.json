@@ -1,0 +1,228 @@
+{
+  // =========================================================
+  //                      TELEMETRY
+  // =========================================================
+  "telemetry.telemetryLevel": "off",
+  // =========================================================
+  //                WORKSPACE SAFETY (PRO DEFAULT)
+  // =========================================================
+  "security.workspace.trust.untrustedFiles": "open",
+  // =========================================================
+  //                    EDITOR (GLOBAL)
+  // =========================================================
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  // Deterministic save actions
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll": "explicit"
+  },
+  "editor.inlineSuggest.enabled": true,
+  "editor.suggestSelection": "first",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.linkedEditing": true,
+  "editor.gotoLocation.alternativeDefinitionCommand": "editor.action.goToImplementation",
+  "editor.gotoLocation.alternativeTypeDefinitionCommand": "editor.action.goToImplementation",
+  "editor.fontSize": 13,
+  "editor.lineHeight": 1.8,
+  "editor.mouseWheelZoom": false,
+  "editor.trimAutoWhitespace": true,
+  "editor.wordWrap": "off",
+  // =========================================================
+  //                         WORKBENCH
+  // =========================================================
+  "workbench.editor.enablePreview": false,
+  "workbench.tree.indent": 15,
+  "terminal.integrated.cursorStyle": "underline",
+  "terminal.integrated.cursorWidth": 2,
+  "editor.semanticHighlighting.enabled": false,
+  // =========================================================
+  //                         FILES
+  // =========================================================
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.autoSave": "onFocusChange",
+  "explorer.autoReveal": true,
+  "explorer.confirmDelete": true,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.compactFolders": false,
+  // =========================================================
+  //              EXCLUDES (PERF + SIGNAL/NOISE)
+  // =========================================================
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.idea": true,
+    "**/__pycache__": true,
+    "**/.mypy_cache": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true,
+    "**/.venv": true,
+    "**/venv": true,
+    "**/*.pyc": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/tags": true,
+    "**/tmp": true
+  },
+  "search.exclude": {
+    "**/.git": true,
+    "**/.idea": true,
+    "**/__pycache__": true,
+    "**/.venv": true,
+    "**/venv": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/*.log": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true,
+    "**/.venv/**": true
+  },
+  // =========================================================
+  //                         GIT (BUILT-IN)
+  // =========================================================
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "git.openRepositoryInParentFolders": "always",
+  "git.pruneOnFetch": true,
+  // Built-in Git blame
+  "git.blame.statusBarItem.enabled": true,
+  "git.blame.editorDecoration.enabled": false,
+  "git.blame.ignoreWhitespace": true,
+  // =========================================================
+  //                         GOLANG
+  // =========================================================
+  "go.enableCodeLens": {
+    "runtest": true
+  },
+  "go.lintOnSave": "file",
+  "go.lintTool": "golangci-lint",
+  "go.lintFlags": ["--fast"],
+  "go.coverOnTestPackage": false,
+  "go.toolsManagement.autoUpdate": true,
+  "[go]": {
+    "editor.snippetSuggestions": "none",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "golang.go"
+  },
+  "gopls": {
+    "staticcheck": true,
+    "usePlaceholders": true,
+    "completeUnimported": true,
+    "deepCompletion": true,
+    "formatting.gofumpt": true,
+    "analyses": {
+      "ST1003": false, // Don't complain about mixed caps in test function names
+      "ST1005": false, // Don't complain about error strings not being lowercase
+      "ST1000": false // Don't complain about package comments not being in the right format
+    }
+  },
+  // =========================================================
+  //                     PYTHON (RUFF-FIRST)
+  // =========================================================
+  // Editor behavior only; rules live in pyproject.toml
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "jupyter.askForKernelRestart": false,
+  "jupyter.interactiveWindow.creationMode": "perFile",
+  "python.terminal.activateEnvironment": true,
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.variableTypes": false,
+  "python.analysis.autoFormatStrings": true,
+  "python.analysis.completeFunctionParens": true,
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.nosetestsEnabled": false,
+  "python.testing.autoTestDiscoverOnSaveEnabled": true,
+  "ruff.enable": true,
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    },
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  },
+  "notebook.formatOnSave.enabled": true,
+  "notebook.codeActionsOnSave": {
+    "notebook.source.fixAll.ruff": "explicit",
+    "notebook.source.organizeImports.ruff": "explicit"
+  },
+  "[requirements]": {
+    "editor.formatOnSave": false
+  },
+  // =========================================================
+  //                     MARKDOWN (BLOGGING)
+  // =========================================================
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.wordWrap": "on"
+  },
+  "prettier.proseWrap": "always",
+  "prettier.printWidth": 80,
+  "markdownlint.run": "onSave",
+  "markdownlint.config": {
+    "MD013": false,
+    "MD033": false
+  },
+  // =========================================================
+  //                     SQL Formatting
+  // =========================================================
+  "[sql]": {
+    "editor.defaultFormatter": "adpyke.vscode-sql-formatter",
+    "editor.formatOnSave": false
+  },
+  "sql-formatter.dialect": "sql",
+  "sql-formatter.uppercase": true,
+  // =========================================================
+  //               REACT / TYPESCRIPT (ENABLED)
+  // =========================================================
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  // =========================================================
+  //                        RUST
+  // =========================================================
+  "rust-analyzer.check.command": "clippy",
+  "[rust]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "githubPullRequests.pullBranch": "never",
+  "chat.viewSessions.orientation": "stacked",
+  "python.createEnvironment.trigger": "off",
+  "terminal.integrated.fontFamily": "monospace",
+  "update.mode": "manual",
+  "workbench.colorTheme": "Catppuccin Mocha"
+}

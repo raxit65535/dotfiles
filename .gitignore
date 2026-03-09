@@ -1,0 +1,23 @@
+# Secrets - NEVER commit these files
+secrets.local
+*.secret
+*.key
+*.pem
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# virtual env
+devbox/.venv/*
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# work files
+work/*

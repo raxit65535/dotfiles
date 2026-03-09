@@ -1,0 +1,6 @@
+# Personal Git Configuration
+# This file is included when working in ~/workspace/personal/
+
+[user]
+	name = Raxit Solanki
+	email = sraxit65535@gmail.com

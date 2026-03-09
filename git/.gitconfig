@@ -1,0 +1,47 @@
+[includeIf "gitdir:~/workspace/raxit65535/"]
+  path = ~/.gitconfig-raxit65535
+
+[user]
+	name = Raxit
+
+[core]
+	editor = vscode --wait
+	autocrlf = input
+	excludesfile = ~/.gitignore_global
+
+[credential]
+	helper =
+	helper = /usr/local/share/gcm-core/git-credential-manager
+
+[credential "https://dev.azure.com"]
+	useHttpPath = true
+
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	ci = commit
+	unstage = reset HEAD --
+	last = log -1 HEAD
+	lg = log --oneline --graph --decorate --all
+	amend = commit --amend --no-edit
+
+[color]
+	ui = auto
+
+[push]
+	default = current
+	autoSetupRemote = true
+
+[pull]
+	rebase = false
+
+[init]
+	defaultBranch = main
+
+[diff]
+	tool = vimdiff
+
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
