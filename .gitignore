@@ -10,7 +10,7 @@ secrets.local
 Thumbs.db
 
 # virtual env
-devbox/.venv/*
+.venv/*
 
 # Editor files
 *.swp
