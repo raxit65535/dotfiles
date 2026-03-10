@@ -77,9 +77,21 @@
       "profiles": ["global", "work"]
     },
     {
-      "name": "gitconfig-shipt",
-      "source": "work/.gitconfig-shipt",
-      "target": "~/.gitconfig-shipt",
+      "name": "db_config",
+      "source": "tools/.db_config",
+      "target": "~/.db_config",
+      "profiles": ["work", "global"]
+    },
+    {
+      "name": "usql_config",
+      "source": "tools/.usqlrc",
+      "target": "~/.usqlrc",
+      "profiles": ["work", "global"]
+    },
+    {
+      "name": "gitconfig-work",
+      "source": "work/.gitconfig-work",
+      "target": "~/.gitconfig-work",
       "profiles": ["work"]
     },
     {
@@ -89,9 +101,9 @@
       "profiles": ["work"]
     },
     {
-      "name": "db_config",
-      "source": "work/.shipt_db_config",
-      "target": "~/.shipt_db_config",
+      "name": "db_config_work",
+      "source": "work/.work_db_config",
+      "target": "~/.work_db_config",
       "profiles": ["work"]
     },
     {

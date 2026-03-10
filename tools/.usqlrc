@@ -1,0 +1,46 @@
+-- ===== usql look & feel =====
+
+-- Privacy
+\set SHOW_HOST_INFORMATION false
+\set PROMPT1 '%S%/%R%# '
+
+-- Safety / scripting
+\set ON_ERROR_STOP on
+\set AUTOCOMMIT off
+
+-- Tables / borders
+\pset border 2
+\pset linestyle unicode
+\pset format aligned
+
+-- Readability
+\pset null '(null)'
+\pset footer on
+\pset tuples_only off
+\pset numericlocale on
+\pset pager off
+\x auto
+
+-- Time formatting for time/date columns
+\pset time RFC3339Nano
+
+-- Performance: stream rows in chunks (avoid fetching huge result sets at once)
+\set FETCH_COUNT 1000
+
+-- History / UX
+\set HISTCONTROL ignoredups
+\set HISTSIZE 10000
+\set USE_READLINE true
+
+-- Show execution time
+\timing on
+
+-- Optional: show rowcount where supported
+\set SHOW_ROWCOUNT on
+
+-- Syntax highlighting (usql uses Chroma; controlled by SYNTAX_* variables)
+\set SYNTAX_HL true
+\set SYNTAX_HL_STYLE dracula
+\set SYNTAX_HL_OVERRIDE_BG true
+-- Let usql pick the best formatter for your terminal:
+-- \unset SYNTAX_HL_FORMAT
