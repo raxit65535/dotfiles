@@ -46,13 +46,5 @@
   {
     "key": "ctrl+l",
     "command": "workbench.action.navigateLeft"
-  },
-  {
-    "key": "cmd+j",
-    "command": "workbench.action.terminal.toggleTerminal"
-  },
-  {
-    "key": "ctrl+`",
-    "command": "workbench.action.terminal.toggleTerminal"
   }
 ]
