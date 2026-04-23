@@ -1,14 +1,47 @@
--- ===== usql look & feel =====
+-- ============================================================
+-- usqlrc
+-- Terminal-first setup for Postgres / ClickHouse / DuckDB / misc
+-- Optimized for readable querying and inspection
+-- ============================================================
 
--- Privacy
+
+-- ------------------------------------------------------------
+-- Prompt / privacy
+-- ------------------------------------------------------------
+
+-- Hide noisy host/version banner info on connect
 \set SHOW_HOST_INFORMATION false
+
+-- Prompt legend:
+-- %S = driver/scheme
+-- %M = host info (when available)
+-- %/ = database
+-- %R = prompt status
+-- %# = prompt char
+--
+-- Clean and compact:
 \set PROMPT1 '%S%/%R%# '
 
--- Safety / scripting
+-- Optional richer prompt:
+-- \set PROMPT1 '%S%M%/%R%# '
+
+
+-- ------------------------------------------------------------
+-- Safety defaults
+-- ------------------------------------------------------------
+
+-- Stop immediately on SQL/meta-command errors in scripts
 \set ON_ERROR_STOP on
+
+-- Keep manual control of transactions
 \set AUTOCOMMIT off
 
--- Tables / borders
+
+-- ------------------------------------------------------------
+-- Display: default table rendering
+-- ------------------------------------------------------------
+
+-- Nicest terminal table style that still stays compact
 \pset border 2
 \pset linestyle unicode
 \pset format aligned
@@ -17,30 +50,62 @@
 \pset null '(null)'
 \pset footer on
 \pset tuples_only off
-\pset numericlocale on
-\pset pager off
+\pset numericlocale off
+
+-- Automatic expanded mode when rows get too wide
+-- This is the best default for mixed narrow + wide result sets
 \x auto
 
--- Time formatting for time/date columns
+-- Time/date display
 \pset time RFC3339Nano
 
--- Performance: stream rows in chunks (avoid fetching huge result sets at once)
-\set FETCH_COUNT 1000
 
--- History / UX
-\set HISTCONTROL ignoredups
-\set HISTSIZE 10000
-\set USE_READLINE true
+-- ------------------------------------------------------------
+-- Interactive quality-of-life
+-- ------------------------------------------------------------
 
--- Show execution time
+-- Show execution timing
 \timing on
 
--- Optional: show rowcount where supported
-\set SHOW_ROWCOUNT on
+-- Readline / history
+\set USE_READLINE true
+\set HISTCONTROL ignoredups
+\set HISTSIZE 10000
 
--- Syntax highlighting (usql uses Chroma; controlled by SYNTAX_* variables)
+-- Stream rows in chunks where supported
+\set FETCH_COUNT 1000
+
+
+-- ------------------------------------------------------------
+-- Syntax highlighting
+-- ------------------------------------------------------------
+
 \set SYNTAX_HL true
 \set SYNTAX_HL_STYLE dracula
 \set SYNTAX_HL_OVERRIDE_BG true
--- Let usql pick the best formatter for your terminal:
+
+-- Let usql auto-pick a formatter for your terminal.
+-- Uncomment if you want to force the default chosen by usql.
 -- \unset SYNTAX_HL_FORMAT
+
+
+-- ------------------------------------------------------------
+-- Helpful aliases / reminders
+-- ------------------------------------------------------------
+
+-- For giant JSON/text rows, use:
+--   SELECT ... \gx
+--
+-- For vertical row rendering:
+--   SELECT ... \G
+--
+-- For export-friendly output:
+--   \a
+--   \pset format json
+--   \pset format csv
+--
+-- For in-terminal charts:
+--   SELECT label, value FROM ... \chart bar
+--
+-- For repeated monitoring:
+--   SELECT ... \watch 2

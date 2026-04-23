@@ -6,76 +6,61 @@
 # PostgreSQL connection Configuration
 # ============================================================================================================
 
-
-# Database connection with IAM Auth
-export IAMPGAUTH=$(gcloud sql generate-login-token)
-# note: export IAM_DB_USER in zshrc to avoid hardcoding in this file
-
-_pg_args () {
-    # default to staging environment and usql client if not provided
-    DB_ENV=${1:-stg}
-    DB_CLIENT=${2:-usql}
-}
-
-# Base connection function
-_pg_connect() {
-    local host=$1
-    local dbname=$2
-
-    local url="postgres://$IAM_DB_USER:$IAMPGAUTH@${host}:5432/${dbname}"
-
-    case $DB_CLIENT in
-        pgcli)
-            pgcli "$url"
-            ;;
-        psql)
-            psql "$url"
-            ;;
-        usql)
-            usql "$url"
-            ;;
-        *)
-            echo "Unknown client: $DB_CLIENT. Supported: pgcli, psql, usql"
-            return 1
-            ;;
-    esac
-}
-
 # local postgres connection
 local_db() {
-    _pg_args  "$@"
-
     local url ="postgres://pguser:pgpass@localhost:9001/postgres"
-
-    case $DB_CLIENT in
-        pgcli)
-            pgcli "$url"
-            ;;
-        psql)
-            psql "$url"
-            ;;
-        usql)
-            usql "$url"
-            ;;
-        *)
-            echo "Unknown client: $DB_CLIENT. Supported: pgcli, psql, usql"
-            return 1
-            ;;
-    esac
+    psql "$url"
 }
 
 # Remote Database connection functions
 # Example usage: remote_database_connection prd pgcli
 # Extend this function to include more remote databases as needed
 
-remote_database_connection() {
-    _pg_args  "$@"
+_pg_args () {
+    DB_ENV=${1:-stg}
+    DB_CLIENT=${2:-psql}
+}
 
-    if [ "$DB_ENV" = "prd" ]; then
-        _pg_connect "remote.database.host.com" "prd_remote_db"
-    else
-        _pg_connect "remote.database.stg.host.com" "stg_remote_db"
+
+# cached token for 55 min
+_pg_token() {
+  local cache="/tmp/.pg_iam_token"
+  local max_age=3300
+
+  if [[ -f "$cache" ]]; then
+    local age=$(( $(date +%s) - $(stat -f %m "$cache") ))
+    if [[ "$age" -lt "$max_age" ]]; then
+      cat "$cache"
+      return
     fi
+  fi
+
+  local token
+  token="$(gcloud sql generate-login-token)" || return 1
+  printf '%s' "$token" > "$cache"
+  printf '%s' "$token"
+}
+
+# Base connection function
+_pg_connect() {
+    local host=$1
+    local dbname=$2
+    local token="$(_pg_token)"
+    local iam_user="${IAM_DB_USER}"
+    local url="postgres://${iam_user}:${token}@${host}:5432/${dbname}"
+
+    case $DB_CLIENT in
+        psql)
+            psql "$url"
+            ;;
+        usql)
+            usql "$url"
+            ;;
+        *)
+            echo "Unknown client: $DB_CLIENT. Supported: pgcli, psql, usql"
+            return 1
+            ;;
+    esac
 }
 
 

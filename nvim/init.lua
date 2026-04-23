@@ -201,19 +201,30 @@ require("lazy").setup({
   },
 
   -- Syntax Highlighting
-  {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    event = { "BufReadPost", "BufNewFile" },
-    opts = {
-      ensure_installed = { "go", "python", "sql", "bash", "lua", "markdown", "markdown_inline" },
-      highlight = { enable = true },
-      indent = { enable = true },
-    },
-    config = function(_, opts)
-      require('nvim-treesitter.configs').setup(opts)
-    end,
-  },
+-- Syntax Highlighting
+{
+  "nvim-treesitter/nvim-treesitter",
+  build = ":TSUpdate",
+  branch = "main",
+  lazy = false,
+  config = function()
+    require('nvim-treesitter').setup()
+
+    -- Install parsers (replaces ensure_installed)
+    require('nvim-treesitter').install({
+      'go', 'python', 'sql', 'bash',
+      'lua', 'markdown', 'markdown_inline'
+    })
+
+    -- Enable highlighting and indentation
+    vim.api.nvim_create_autocmd('FileType', {
+      callback = function()
+        pcall(vim.treesitter.start)
+        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      end,
+    })
+  end,
+},
 
   -- Git Signs
   {
@@ -300,13 +311,13 @@ require("lazy").setup({
   },
 
  -- markdown Rendering
-  {
-    'MeanderingProgrammer/render-markdown.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },
-    ---@module 'render-markdown'
-    ---@type render.md.UserConfig
-    opts = {},
-  },
+  -- {
+  --   'MeanderingProgrammer/render-markdown.nvim',
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },
+  --   ---@module 'render-markdown'
+  --   ---@type render.md.UserConfig
+  --   opts = {},
+  -- },
 
   -- which-key for Buffer Local Keymaps
   {

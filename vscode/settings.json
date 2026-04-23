@@ -8,6 +8,15 @@
   // =========================================================
   "security.workspace.trust.untrustedFiles": "open",
   // =========================================================
+  //                    AI - Copilot
+  // =========================================================
+  // In VS Code settings.json — pick one:
+  // Option A: Use Copilot for inline, Continue for chat
+  "continue.enableTabAutocomplete": true,
+
+  // Option B: Use Continue for inline, disable Copilot inline
+  // "github.copilot.enable": { "*": false },
+  // =========================================================
   //                    EDITOR (GLOBAL)
   // =========================================================
   "editor.formatOnSave": true,
@@ -25,10 +34,42 @@
   "editor.gotoLocation.alternativeDefinitionCommand": "editor.action.goToImplementation",
   "editor.gotoLocation.alternativeTypeDefinitionCommand": "editor.action.goToImplementation",
   "editor.fontSize": 13,
-  "editor.lineHeight": 1.8,
+  "window.zoomLevel": 1,
+  "editor.lineHeight": 2,
   "editor.mouseWheelZoom": false,
   "editor.trimAutoWhitespace": true,
   "editor.wordWrap": "off",
+  "workbench.colorCustomizations": {
+    "[Dark Modern]": {
+      "terminal.background": "#1F1F1F",
+      "panel.background": "#1F1F1F"
+    },
+    "[Dark 2026]": {
+      // --- Existing Background Overrides ---
+      "editor.background": "#1F1F1F",
+      // "terminal.background": "#1F1F1F",
+      // "panel.background": "#1F1F1F",
+
+      "breadcrumb.background": "#1F1F1F",
+      "panelStickyScroll.background": "#1F1F1F",
+      "editorStickyScroll.background": "#1F1F1F",
+
+      // --- Fixing the Gutter & Line Numbers ---
+      "editorGutter.background": "#1F1F1F", // Matches the line number area to editor
+
+      // --- Fixing File Tabs ---
+      "tab.activeBackground": "#1F1F1F", // Active tab matches editor
+      "tab.inactiveBackground": "#1F1F1F" // Inactive tabs match editor
+    }
+  },
+  "editor.tokenColorCustomizations": {
+    "[Dark Modern]": {
+      "variables": "#88C0D0" // sage-mint color for all variables
+    },
+    "[Dark 2026]": {
+      "functions": "#DCDCAA"
+    }
+  },
   // =========================================================
   //                         WORKBENCH
   // =========================================================
@@ -37,6 +78,7 @@
   "terminal.integrated.cursorStyle": "underline",
   "terminal.integrated.cursorWidth": 2,
   "editor.semanticHighlighting.enabled": false,
+  "terminal.integrated.defaultLocation": "editor",
   // =========================================================
   //                         FILES
   // =========================================================
@@ -127,10 +169,6 @@
       "ST1000": false // Don't complain about package comments not being in the right format
     }
   },
-  // =========================================================
-  //                     PYTHON (RUFF-FIRST)
-  // =========================================================
-  // Editor behavior only; rules live in pyproject.toml
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
   "jupyter.askForKernelRestart": false,
   "jupyter.interactiveWindow.creationMode": "perFile",
@@ -224,5 +262,6 @@
   "python.createEnvironment.trigger": "off",
   "terminal.integrated.fontFamily": "monospace",
   "update.mode": "manual",
-  "workbench.colorTheme": "Catppuccin Mocha"
+  "editor.minimap.enabled": false,
+  "workbench.iconTheme": "material-icon-theme"
 }

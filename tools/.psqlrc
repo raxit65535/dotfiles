@@ -1,0 +1,87 @@
+-- =========================================================
+-- Environment detection
+-- =========================================================
+
+-- Default environment (override with: PSQL_ENV=prod psql ...)
+\setenv PSQL_ENV :PSQL_ENV
+
+\if :{?PSQL_ENV}
+\else
+  \setenv PSQL_ENV dev
+\endif
+
+
+-- =========================================================
+-- Visual formatting
+-- =========================================================
+
+\pset border 2
+\pset linestyle unicode
+\pset format wrapped
+
+-- terminal width detection
+\pset columns 0
+
+-- readability
+\pset null '(null)'
+\pset numericlocale off
+\pset footer on
+\pset tuples_only off
+
+-- pager
+\pset pager on
+
+-- =========================================================
+-- behavior
+-- =========================================================
+
+\x auto
+\timing on
+
+-- stop scripts on errors
+\set ON_ERROR_STOP on
+
+-- history improvements
+\set HISTCONTROL ignoredups
+\set HISTSIZE 10000
+
+-- =========================================================
+-- prompt styling
+-- =========================================================
+
+-- red prompt for prod
+\if :PSQL_ENV = 'prod'
+\set PROMPT1 '%[%033[1;31m%]%n@%/%R%# %[%033[0m%]'
+\else
+-- green prompt for non-prod
+\set PROMPT1 '%[%033[1;32m%]%n@%/%R%# %[%033[0m%]'
+\endif
+
+-- =========================================================
+-- useful shortcuts
+-- =========================================================
+
+-- show current connection
+\set conninfo '\\conninfo'
+
+-- list tables quickly
+\set tables '\\dt+'
+
+-- expanded output toggle
+\set x '\\x'
+
+-- =========================================================
+-- JSON helpers (very useful)
+-- =========================================================
+
+\set json_pretty 'SELECT jsonb_pretty(:''json'');'
+
+-- =========================================================
+-- quality-of-life
+-- =========================================================
+
+-- safer deletes
+\set VERBOSITY verbose
+
+-- show row counts
+\set SHOW_CONTEXT always
