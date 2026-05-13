@@ -39,6 +39,12 @@
       "profiles": ["global", "work"]
     },
     {
+      "name": "zprofile",
+      "source": "shell/.zprofile",
+      "target": "~/.zprofile",
+      "profiles": ["global", "work"]
+    },
+    {
       "name": "gitconfig",
       "source": "git/.gitconfig",
       "target": "~/.gitconfig",
@@ -78,20 +84,32 @@
     },
     {
       "name": "db_config",
-      "source": "tools/.db_config",
+      "source": "tools/db/.db_config",
       "target": "~/.db_config",
       "profiles": ["work", "global"]
     },
     {
-      "name": "usql_config",
-      "source": "tools/.usqlrc",
+      "name": "psqlrc_config",
+      "source": "tools/db/.psqlrc",
+      "target": "~/.psqlrc",
+      "profiles": ["work", "global"]
+    },
+    {
+      "name": "usqlrc_config",
+      "source": "tools/db/.usqlrc",
       "target": "~/.usqlrc",
       "profiles": ["work", "global"]
     },
     {
+      "name": "kafka_config",
+      "source": "tools/kafka/.kafka_config",
+      "target": "~/.kafka_config",
+      "profiles": ["global", "work"]
+    },
+    {
       "name": "gitconfig-work",
       "source": "work/.gitconfig-work",
-      "target": "~/.gitconfig-work",
+      "target": "~/.gitconfig-shipt",
       "profiles": ["work"]
     },
     {
@@ -107,16 +125,22 @@
       "profiles": ["work"]
     },
     {
-      "name": "kafka_config",
-      "source": "work/.kafka_config",
-      "target": "~/.kafka_config",
+      "name": "work_kafka_config",
+      "source": "work/.work_kafka_config",
+      "target": "~/.work_kafka_config",
       "profiles": ["work"]
     },
     {
-      "name": "zprofile",
-      "source": "work/.zprofile",
-      "target": "~/.zprofile",
+      "name": "secrets_config",
+      "source": "work/.secrets",
+      "target": "~/.secrets",
       "profiles": ["work"]
+    },
+    {
+      "name": "vs_agents",
+      "source": "vs-agents",
+      "target": "~/.vs-agents",
+      "profiles": ["global", "work"]
     }
   ]
 }

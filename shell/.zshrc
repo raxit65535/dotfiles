@@ -56,8 +56,9 @@ export GOARCH=arm64
 # Python (Pyenv)
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
+eval "$(pyenv init - --no-rehash)"
+# eval "$(pyenv init --path)"
+# eval "$(pyenv init -)"
 
 # Poetry
 export POETRY_HOME=$HOME/.local/bin
@@ -71,13 +72,13 @@ export PATH="$HOME/.poetry/bin:$PATH"
 export DOCKER_VOLUMES="$HOME/docker-volumes"
 
 # Kafka
-if [ -d "$HOME/kafka" ]; then
-  export KAFKA_HOME="$HOME/kafka"
+if [ -d "$HOME/bigdata/kafka_2.13-4.0.0" ]; then
+  export KAFKA_HOME="$HOME/bigdata/kafka_2.13-4.0.0"
   export PATH="$PATH:$KAFKA_HOME/bin"
 fi
 
-# Local BigTable Emulator
-export LOCAL_BIGTABLE_HOST=localhost:8086
+# BigTable Emulator
+export BIGTABLE_EMULATOR_HOST=localhost:8086
 export LOCAL_BIGTABLE_EMULATOR_HOST=localhost:8086
 
 # =============================================================================
@@ -97,6 +98,12 @@ export PATH="$HOME/.local/bin:$PATH"
 # Consolidated system PATH
 export PATH="/usr/local/bin/:$HOME/.local/bin/bin/:/usr/local/opt/libpq/bin:/opt/homebrew/bin:$JAVA_HOME:/usr/local/bin:$POETRY_HOME:$KAFKA_HOME/bin:$GOPATH/bin:$GOROOT/bin:$PATH"
 
+# postgres18
+export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
+
+# opencode
+export PATH="$HOME/.opencode/bin:$PATH"
+
 # =============================================================================
 # SHELL COMPLETIONS & INTEGRATIONS
 # =============================================================================
@@ -114,13 +121,36 @@ if [ -f "$HOME/bigdata/google-cloud-sdk/completion.zsh.inc" ]; then
 fi
 
 # =============================================================================
-# EXTERNAL CONFIGURATION FILES
+# Source FILES
 # =============================================================================
 
-# Aliases
-if [ -f ~/dotfiles/shell/aliases ]; then
-  source ~/dotfiles/shell/aliases
+if [[ -f "$HOME/.aliases" ]]; then
+  source "$HOME/.aliases"
 fi
 
-# Tool-specific configs
-source ~/.db_config
+if [[ -f "$HOME/.db_config" ]]; then
+  source "$HOME/.db_config"
+fi
+
+if [[ -f "$HOME/.kafka_config" ]]; then
+  source "$HOME/.kafka_config"
+fi
+
+if [[ -f "$HOME/.zprofile" ]]; then
+  source "$HOME/.zprofile"
+fi
+
+# source work files
+if [[ -f "$HOME/.work_db_config" ]]; then
+  source "$HOME/.work_db_config"
+fi
+
+if [[ -f "$HOME/.work_kafka_config" ]]; then
+  source "$HOME/.work_kafka_config"
+fi
+
+if [[ -f "$HOME/.secrets" ]]; then
+  source "$HOME/.secrets"
+fi
+
+

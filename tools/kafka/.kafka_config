@@ -1,0 +1,186 @@
+#!/bin/sh
+
+# Kafka helper functions (generic, cluster-agnostic defaults)
+# Override these in your shell or profile-specific files as needed.
+
+export KAFKA_BOOTSTRAP_SERVERS="${KAFKA_BOOTSTRAP_SERVERS:-localhost:9092}"
+export KAFKA_SECURITY_PROTOCOL="${KAFKA_SECURITY_PROTOCOL:-PLAINTEXT}"
+
+_kafka_require_bootstrap() {
+	if [[ -z "${KAFKA_BOOTSTRAP_SERVERS:-}" ]]; then
+		echo "KAFKA_BOOTSTRAP_SERVERS is not set"
+		return 1
+	fi
+}
+
+_kcat_bin() {
+	if command -v kcat >/dev/null 2>&1; then
+		echo "kcat"
+		return 0
+	fi
+	if command -v kafkacat >/dev/null 2>&1; then
+		echo "kafkacat"
+		return 0
+	fi
+	echo "Install kcat (or kafkacat) to use these helpers"
+	return 1
+}
+
+_kafka_cli_cmd() {
+	local base="$1"
+	if command -v "$base" >/dev/null 2>&1; then
+		echo "$base"
+		return 0
+	fi
+	if command -v "${base}.sh" >/dev/null 2>&1; then
+		echo "${base}.sh"
+		return 0
+	fi
+	echo "Kafka CLI not found: $base (or ${base}.sh)"
+	return 1
+}
+
+_kafka_common_cli_args() {
+	printf '%s' "--bootstrap-server ${KAFKA_BOOTSTRAP_SERVERS}"
+}
+
+# =====================================================================================
+# kcat helpers
+# =====================================================================================
+
+# Show cluster metadata
+kc_meta() {
+	_kafka_require_bootstrap || return 1
+	local bin
+	bin="$(_kcat_bin)" || return 1
+	"$bin" -b "$KAFKA_BOOTSTRAP_SERVERS" -L
+}
+
+# List topics (names only)
+kc_topics() {
+	_kafka_require_bootstrap || return 1
+	local bin
+	bin="$(_kcat_bin)" || return 1
+	"$bin" -b "$KAFKA_BOOTSTRAP_SERVERS" -L | sed -n 's/^  topic "\([^"]*\)".*/\1/p' | sort -u
+}
+
+# Consume messages from a topic
+# Usage: kc_consume <topic> [count]
+kc_consume() {
+	_kafka_require_bootstrap || return 1
+	local topic="$1"
+	local count="${2:-50}"
+	local bin
+	if [[ -z "$topic" ]]; then
+		echo "Usage: kc_consume <topic> [count]"
+		return 1
+	fi
+	bin="$(_kcat_bin)" || return 1
+	"$bin" -b "$KAFKA_BOOTSTRAP_SERVERS" -C -t "$topic" -c "$count" -o end -q
+}
+
+# Produce messages to a topic (read stdin)
+# Usage: echo '{"hello":"world"}' | kc_produce my-topic
+kc_produce() {
+	_kafka_require_bootstrap || return 1
+	local topic="$1"
+	local bin
+	if [[ -z "$topic" ]]; then
+		echo "Usage: kc_produce <topic>"
+		return 1
+	fi
+	bin="$(_kcat_bin)" || return 1
+	"$bin" -b "$KAFKA_BOOTSTRAP_SERVERS" -P -t "$topic"
+}
+
+# Search message values using grep pattern
+# Usage: kc_search <topic> <pattern> [count]
+kc_search() {
+	_kafka_require_bootstrap || return 1
+	local topic="$1"
+	local pattern="$2"
+	local count="${3:-200}"
+	local bin
+	if [[ -z "$topic" || -z "$pattern" ]]; then
+		echo "Usage: kc_search <topic> <pattern> [count]"
+		return 1
+	fi
+	bin="$(_kcat_bin)" || return 1
+	"$bin" -b "$KAFKA_BOOTSTRAP_SERVERS" -C -t "$topic" -c "$count" -o end -q | grep -i -- "$pattern"
+}
+
+# =====================================================================================
+# Apache Kafka CLI helpers
+# =====================================================================================
+
+# List topics
+k_topics() {
+	_kafka_require_bootstrap || return 1
+	local cmd
+	cmd="$(_kafka_cli_cmd kafka-topics)" || return 1
+	"$cmd" $(_kafka_common_cli_args) --list
+}
+
+# Describe one topic
+# Usage: k_topic_describe <topic>
+k_topic_describe() {
+	_kafka_require_bootstrap || return 1
+	local topic="$1"
+	local cmd
+	if [[ -z "$topic" ]]; then
+		echo "Usage: k_topic_describe <topic>"
+		return 1
+	fi
+	cmd="$(_kafka_cli_cmd kafka-topics)" || return 1
+	"$cmd" $(_kafka_common_cli_args) --describe --topic "$topic"
+}
+
+# List consumer groups
+k_groups() {
+	_kafka_require_bootstrap || return 1
+	local cmd
+	cmd="$(_kafka_cli_cmd kafka-consumer-groups)" || return 1
+	"$cmd" $(_kafka_common_cli_args) --list
+}
+
+# Describe one consumer group
+# Usage: k_group_describe <group-id>
+k_group_describe() {
+	_kafka_require_bootstrap || return 1
+	local group="$1"
+	local cmd
+	if [[ -z "$group" ]]; then
+		echo "Usage: k_group_describe <group-id>"
+		return 1
+	fi
+	cmd="$(_kafka_cli_cmd kafka-consumer-groups)" || return 1
+	"$cmd" $(_kafka_common_cli_args) --describe --group "$group"
+}
+
+# Consume with Kafka console consumer
+# Usage: k_consume <topic>
+k_consume() {
+	_kafka_require_bootstrap || return 1
+	local topic="$1"
+	local cmd
+	if [[ -z "$topic" ]]; then
+		echo "Usage: k_consume <topic>"
+		return 1
+	fi
+	cmd="$(_kafka_cli_cmd kafka-console-consumer)" || return 1
+	"$cmd" $(_kafka_common_cli_args) --topic "$topic" --from-beginning
+}
+
+# Produce with Kafka console producer
+# Usage: k_produce <topic>
+k_produce() {
+	_kafka_require_bootstrap || return 1
+	local topic="$1"
+	local cmd
+	if [[ -z "$topic" ]]; then
+		echo "Usage: k_produce <topic>"
+		return 1
+	fi
+	cmd="$(_kafka_cli_cmd kafka-console-producer)" || return 1
+	"$cmd" $(_kafka_common_cli_args) --topic "$topic"
+}

@@ -201,7 +201,6 @@ require("lazy").setup({
   },
 
   -- Syntax Highlighting
--- Syntax Highlighting
 {
   "nvim-treesitter/nvim-treesitter",
   build = ":TSUpdate",
@@ -225,19 +224,6 @@ require("lazy").setup({
     })
   end,
 },
-
-  -- Git Signs
-  {
-    "lewis6991/gitsigns.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-      },
-    }
-  },
 
   -- Terminal
   {
@@ -311,13 +297,13 @@ require("lazy").setup({
   },
 
  -- markdown Rendering
-  -- {
-  --   'MeanderingProgrammer/render-markdown.nvim',
-  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },
-  --   ---@module 'render-markdown'
-  --   ---@type render.md.UserConfig
-  --   opts = {},
-  -- },
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
+  },
 
   -- which-key for Buffer Local Keymaps
   {
@@ -387,3 +373,4 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.opt_local.shiftwidth = 4
   end,
 })
+

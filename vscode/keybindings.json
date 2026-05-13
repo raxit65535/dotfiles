@@ -36,15 +36,26 @@
     "command": "workbench.action.splitEditorRight"
   },
   {
-    "key": "f12",
-    "command": "workbench.action.showNextWindowTab"
-  },
-  {
     "key": "ctrl+r",
     "command": "workbench.action.navigateRight"
   },
   {
     "key": "ctrl+l",
     "command": "workbench.action.navigateLeft"
+  },
+  {
+    "key": "cmd+shift+r",
+    "command": "references-view.findReferences",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+shift+t",
+    "command": "editor.action.goToTypeDefinition",
+    "when": "editorHasTypeDefinitionProvider && editorTextFocus"
+  },
+  {
+    "key": "cmd+shift+d",
+    "command": "editor.action.revealDefinition",
+    "when": "editorHasDefinitionProvider && editorTextFocus"
   }
 ]

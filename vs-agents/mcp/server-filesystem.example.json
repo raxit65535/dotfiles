@@ -1,0 +1,10 @@
+{
+  "name": "filesystem",
+  "command": "npx",
+  "args": [
+    "-y",
+    "@modelcontextprotocol/server-filesystem",
+    "/Users/raxitsolanki/workspace/shipt/personal"
+  ],
+  "env": {}
+}

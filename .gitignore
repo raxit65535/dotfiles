@@ -12,6 +12,11 @@ Thumbs.db
 # virtual env
 .venv/*
 
+# Python cache / bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
 # Editor files
 *.swp
 *.swo

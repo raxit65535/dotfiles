@@ -258,10 +258,10 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "githubPullRequests.pullBranch": "never",
-  "chat.viewSessions.orientation": "stacked",
   "python.createEnvironment.trigger": "off",
   "terminal.integrated.fontFamily": "monospace",
   "update.mode": "manual",
   "editor.minimap.enabled": false,
-  "workbench.iconTheme": "material-icon-theme"
+  "workbench.iconTheme": "material-icon-theme",
+  "chat.viewSessions.orientation": "stacked"
 }

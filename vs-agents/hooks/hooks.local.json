@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "mode": "warn",
+  "_comment": "Active hooks config in warn mode. Preferred command patterns: validate before commit, review before push, test before mark done.",
+  "hooks": [
+    {
+      "name": "pre-tool-use",
+      "script": "./pre-tool-use.sh",
+      "enabled": true
+    },
+    {
+      "name": "post-tool-use",
+      "script": "./post-tool-use.sh",
+      "enabled": true
+    }
+  ],
+  "_setup_notes": {
+    "activation": "Move or symlink this file to ~/.vs-agents/hooks/hooks.json to activate. Example: ln -sfn hooks.local.json hooks.json",
+    "mode": "warn - allows operations with warnings, does not block (unlike enforce mode in gates)",
+    "script_paths": "Pre/post-tool-use scripts reference gate-aligned validation patterns and log decisions to hook.log"
+  }
+}

@@ -2,7 +2,7 @@
   path = ~/.gitconfig-raxit65535
 
 [user]
-	name = Raxit
+	name = Raxit Solanki
 
 [core]
 	editor = vscode --wait
@@ -10,6 +10,9 @@
 	excludesfile = ~/.gitignore_global
 
 [credential]
+  helper = osxkeychain
+	interactive = true
+	gitHubAccountFiltering = false
 	helper =
 	helper = /usr/local/share/gcm-core/git-credential-manager
 
@@ -45,3 +48,9 @@
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3
+
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
