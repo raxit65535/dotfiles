@@ -1,6 +1,9 @@
 // Place your key bindings in this file to override the defaults
 [
-  // Collapse all folders in Explorer
+  // ────────────────────────────────────────────────────────────────
+  // Trivial keybindings (simple remaps and commonly used commands)
+  // ────────────────────────────────────────────────────────────────
+
   {
     "key": "cmd+shift+c",
     "command": "workbench.files.action.collapseExplorerFolders",
@@ -15,25 +18,6 @@
     "key": "ctrl+d",
     "command": "cursorPageDown",
     "when": "editorTextFocus"
-  },
-  {
-    "key": "shift+cmd+i",
-    "command": "-workbench.action.chat.openagent",
-    "when": "config.chat.agent.enabled && !chatSetupDisabled && !chatSetupHidden"
-  },
-  {
-    "key": "cmd+shift+i",
-    "command": "workbench.panel.chat.view.copilot.focus",
-    "when": "!auxiliaryBarVisible"
-  },
-  {
-    "key": "cmd+shift+i",
-    "command": "workbench.action.toggleAuxiliaryBar",
-    "when": "auxiliaryBarVisible"
-  },
-  {
-    "key": "shift+cmd+r",
-    "command": "workbench.action.splitEditorRight"
   },
   {
     "key": "ctrl+r",
@@ -57,5 +41,122 @@
     "key": "cmd+shift+d",
     "command": "editor.action.revealDefinition",
     "when": "editorHasDefinitionProvider && editorTextFocus"
+  },
+
+  // ────────────────────────────────────────────────────────────────
+  // AI and Chat (open/toggle chat + edit last prompt)
+  // ────────────────────────────────────────────────────────────────
+  {
+    "key": "shift+cmd+i",
+    "command": "workbench.action.chat.openagent",
+    "when": "config.chat.agent.enabled && !chatSetupDisabled && !chatSetupHidden"
+  },
+  {
+    "key": "cmd+shift+i",
+    "command": "workbench.panel.chat.view.copilot.focus",
+    "when": "!auxiliaryBarVisible"
+  },
+  {
+    "key": "cmd+shift+i",
+    "command": "workbench.action.toggleAuxiliaryBar",
+    "when": "auxiliaryBarVisible"
+  },
+  {
+    "key": "alt+up",
+    "command": "workbench.action.chat.editPreviousRequest",
+    "when": "chatInputHasFocus"
+  },
+  {
+    "key": "cmd+i",
+    "command": "inlineChat.start",
+    "when": "editorFocus"
+  },
+
+  // ────────────────────────────────────────────────────────────────
+  // Terminal (maximized toggle + resize + tab nav)
+  // ────────────────────────────────────────────────────────────────
+
+  // Cmd+J: open/close terminal panel (preserves its current size)
+  {
+    "key": "cmd+j",
+    "command": "workbench.action.togglePanel"
+  },
+
+  // Ctrl+`: same — keep the default working alongside Cmd+J
+  // (No binding needed — this is the VS Code default.
+  //  Don't add anything for it unless you've previously overridden it.)
+
+  // Cmd+Shift+J: toggle terminal size (normal ↔ maximized)
+  // Works only when the panel is already visible.
+  {
+    "key": "cmd+shift+j",
+    "command": "workbench.action.toggleMaximizedPanel",
+    "when": "panelVisible"
+  },
+
+  // Ctrl+L / Ctrl+R: navigate terminal tabs (only when terminal is focused, to avoid conflicts with editor nav bindings)
+  {
+    "key": "ctrl+l",
+    "command": "workbench.action.terminal.focusNext",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+r",
+    "command": "workbench.action.terminal.focusPrevious",
+    "when": "terminalFocus"
+  },
+
+  // Cmd+Shift+': create a new terminal in the editor area
+  // To switch to any existing terminal (panel or editor), use Cmd+P
+  // and type its name — it appears in the file picker results
+  {
+    "key": "cmd+shift+'",
+    "command": "workbench.action.createTerminalEditor"
+  },
+  // ────────────────────────────────────────────────────────────────
+  // File and code navigation
+  // ────────────────────────────────────────────────────────────────
+
+  {
+    "key": "cmd+e",
+    "command": "workbench.action.quickOpenPreviousRecentlyUsedEditor"
+  },
+  {
+    "key": "ctrl+o",
+    "command": "workbench.action.navigateBack"
+  },
+
+  // ────────────────────────────────────────────────────────────────
+  // Diff and source control
+  // ────────────────────────────────────────────────────────────────
+
+  {
+    "key": "alt+down",
+    "command": "workbench.action.compareEditor.nextChange",
+    "when": "textCompareEditorVisible"
+  },
+  {
+    "key": "alt+up",
+    "command": "workbench.action.compareEditor.previousChange",
+    "when": "textCompareEditorVisible && !chatInputHasFocus"
+  },
+  {
+    "key": "cmd+shift+g",
+    "command": "workbench.view.scm"
+  },
+
+  // ────────────────────────────────────────────────────────────────
+  // markdown preview toggle
+  // ────────────────────────────────────────────────────────────────
+  // Alt+M: toggle preview to the side
+  {
+    "key": "alt+m",
+    "command": "markdown.showPreviewToSide",
+    "when": "editorLangId == markdown && !markdownPreviewFocus"
+  },
+  {
+    "key": "alt+m",
+    "command": "markdown.showSource",
+    "when": "markdownPreviewFocus"
   }
 ]

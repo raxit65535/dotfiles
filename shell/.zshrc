@@ -18,7 +18,7 @@ plugins=(
   minikube
   kubectl
   poetry
-  pyenv
+  uv
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -53,12 +53,8 @@ export GOROOT=$(go env GOROOT)
 export GOBIN=$(go env GOBIN)
 export GOARCH=arm64
 
-# Python (Pyenv)
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - --no-rehash)"
-# eval "$(pyenv init --path)"
-# eval "$(pyenv init -)"
+# Python (uv)
+# TBD
 
 # Poetry
 export POETRY_HOME=$HOME/.local/bin
@@ -87,22 +83,6 @@ export LOCAL_BIGTABLE_EMULATOR_HOST=localhost:8086
 
 # Ollama
 export OLLAMA_HOST="127.0.0.1:5000"
-
-# =============================================================================
-# PATH CONFIGURATION
-# =============================================================================
-
-# Add local bin to PATH
-export PATH="$HOME/.local/bin:$PATH"
-
-# Consolidated system PATH
-export PATH="/usr/local/bin/:$HOME/.local/bin/bin/:/usr/local/opt/libpq/bin:/opt/homebrew/bin:$JAVA_HOME:/usr/local/bin:$POETRY_HOME:$KAFKA_HOME/bin:$GOPATH/bin:$GOROOT/bin:$PATH"
-
-# postgres18
-export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
-
-# opencode
-export PATH="$HOME/.opencode/bin:$PATH"
 
 # =============================================================================
 # SHELL COMPLETIONS & INTEGRATIONS
@@ -149,8 +129,26 @@ if [[ -f "$HOME/.work_kafka_config" ]]; then
   source "$HOME/.work_kafka_config"
 fi
 
+if [[ -f "$HOME/.work_zshrc" ]]; then
+  source "$HOME/.work_zshrc"
+fi
+
 if [[ -f "$HOME/.secrets" ]]; then
   source "$HOME/.secrets"
 fi
 
+# =============================================================================
+# PATH CONFIGURATION
+# =============================================================================
 
+# Add local bin to PATH
+export PATH="$HOME/.local/bin:$PATH"
+
+# Consolidated system PATH
+export PATH="/usr/local/bin/:$HOME/.local/bin/bin/:/usr/local/opt/libpq/bin:/opt/homebrew/bin:$JAVA_HOME:/usr/local/bin:$POETRY_HOME:$KAFKA_HOME/bin:$GOPATH/bin:$GOROOT/bin:$PATH"
+
+# postgres18
+export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
+
+# npm global packages
+export PATH=~/.npm-global/bin:$PATH

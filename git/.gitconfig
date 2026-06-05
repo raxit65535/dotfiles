@@ -3,6 +3,7 @@
 
 [user]
 	name = Raxit Solanki
+	email = sraxit65535@gmail.com
 
 [core]
 	editor = vscode --wait

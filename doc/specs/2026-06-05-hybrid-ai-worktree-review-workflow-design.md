@@ -86,6 +86,7 @@ git push -u origin feat-x
 ### Division of responsibilities
 
 **IDE**
+
 - manual coding and refactoring
 - code navigation and references
 - test runs and validation
@@ -94,12 +95,14 @@ git push -u origin feat-x
 - Copilot Chat iteration
 
 **tmux / `cop` session**
+
 - long-running AI implementation tasks
 - persistent shell / review / watch windows
 - detached execution that can be resumed later
 - terminal-based review before or alongside IDE review
 
 **Neovim / CLI**
+
 - review `doc/*` and markdown specs/plans/tasks
 - branch-wide and commit-wise first-pass review
 - quick changed-file inspection
@@ -163,6 +166,7 @@ git diff main...HEAD | delta
 ```
 
 Primary surfaces:
+
 - tmux `review` window
 - IDE worktree window for changed-file browsing and navigation
 
@@ -185,6 +189,7 @@ This pass determines whether history should be cleaned up before push.
 Goal: make the feature production-ready.
 
 Primary actions:
+
 - manual edits in IDE or Neovim
 - interactive staging with `git add -p`
 - cleanup commits with `git commit --fixup` and `git rebase -i main`
@@ -201,6 +206,7 @@ The IDE remains the primary deep-review surface.
 Open the worktree directory itself, not the main checkout.
 
 Use the IDE for:
+
 - changed-file review
 - navigation-heavy investigation
 - references / implementations / symbol search
@@ -208,6 +214,7 @@ Use the IDE for:
 - PR preparation and GitHub integration
 
 Recommended role in the review stack:
+
 - tmux/CLI for fast branch overview
 - IDE for deeper file-level and semantic review
 - PR UI as the final external review surface, not the first serious inspection point
@@ -217,6 +224,7 @@ Recommended role in the review stack:
 Neovim is explicitly allowed as a review tool in this workflow, especially inside the tmux `review` window.
 
 Best-fit use cases:
+
 - reviewing `doc/specs`, `doc/plans`, and markdown notes
 - first-pass code review of changed files
 - hunk and commit review
@@ -233,6 +241,7 @@ git diff main...HEAD | delta
 ```
 
 Then open Neovim for:
+
 - suspicious files
 - markdown updates
 - targeted fixes
@@ -276,6 +285,7 @@ feature-open <repo> <feature>
 or equivalent behavior via `cop` plus a worktree helper.
 
 That helper should:
+
 - resolve the repo path
 - create `.worktrees/<feature>` if missing
 - create the branch if needed
@@ -291,6 +301,7 @@ That helper should:
 > open or attach the tmux execution workspace for this feature worktree
 
 Desired behavior:
+
 - accept a session/feature name and optional worktree path
 - attach if the session already exists
 - otherwise create the standard four-window layout
@@ -303,6 +314,7 @@ Desired behavior:
 > close the tmux execution workspace, and optionally remove the worktree when the feature is done
 
 Desired behavior:
+
 - kill the tmux session safely
 - optionally remove the worktree
 - avoid removing the main repo checkout
@@ -313,16 +325,19 @@ Desired behavior:
 Roll out in phases instead of replacing the entire workflow immediately.
 
 ### Phase 1
+
 - adopt worktree-per-feature
 - keep IDE as default
 - use tmux only for one meaningful long-running AI task
 - use terminal review commands in the tmux `review` window
 
 ### Phase 2
+
 - experiment with Neovim for `doc/*` review and changed-file inspection
 - test whether commit review and markdown review feel better in tmux/nvim than in the IDE
 
 ### Phase 3
+
 - only after proving value, refine `cop` / `uncop`
 - add minimum viable Neovim Git review enhancements
 - optionally add a repo/worktree launcher to remove shell-navigation friction

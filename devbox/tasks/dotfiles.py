@@ -54,10 +54,19 @@ class DotfilesLinkTask(Task):
                 prefix = "[dry-run] " if dry_run else ""
                 ctx.log(f"{prefix}Symlink already correct: {target} -> {source}")
                 return
+
+            backup = self._backup_path(target)
             if dry_run:
-                ctx.log(f"[dry-run] Would replace symlink: {target} -> {existing}")
+                ctx.log(
+                    "[dry-run] Would back up existing symlink: "
+                    f"{target} -> {backup} (currently points to {existing})"
+                )
             else:
-                target.unlink()
+                ctx.log(
+                    "Backing up existing symlink: "
+                    f"{target} -> {backup} (currently points to {existing})"
+                )
+                shutil.move(str(target), str(backup))
 
         elif target.exists():
             backup = self._backup_path(target)
@@ -93,7 +102,9 @@ class DotfilesLinkTask(Task):
         index = 1
         while True:
             candidate = target.with_name(f"{target.name}.backup.{index}")
-            if not candidate.exists():
+            # exists() is false for broken symlinks, but those backup slots are
+            # still occupied and must not be reused.
+            if not candidate.exists() and not candidate.is_symlink():
                 return candidate
             index += 1
 
@@ -112,8 +123,9 @@ class DotfilesRevertTask(Task):
 
         for entry in entries:
             name = entry.get("name", "<unnamed>")
+            source_rel = entry.get("source")
             target_raw = entry.get("target")
-            if not target_raw:
+            if not source_rel or not target_raw:
                 continue
 
             profiles = entry.get("profiles")
@@ -136,6 +148,17 @@ class DotfilesRevertTask(Task):
                 skipped += 1
                 continue
 
+            expected_source = (ctx.dotfiles_root / source_rel).resolve(strict=False)
+            current_source = target.resolve(strict=False)
+            if current_source != expected_source:
+                ctx.log(
+                    "Skipping revert "
+                    f"'{name}': current symlink points to {current_source}, "
+                    f"expected {expected_source}"
+                )
+                skipped += 1
+                continue
+
             if backup is None:
                 if dry_run:
                     ctx.log(f"[dry-run] Would remove symlink (no backup found): {target}")
@@ -148,9 +171,9 @@ class DotfilesRevertTask(Task):
             if dry_run:
                 ctx.log(f"[dry-run] Would restore: {backup} -> {target}")
             else:
+                ctx.log(f"Restoring: {backup} -> {target}")
                 target.unlink()
                 shutil.move(str(backup), str(target))
-                ctx.log(f"Restored: {backup} -> {target}")
             reverted += 1
 
         ctx.log(f"Revert complete: {reverted} reverted, {skipped} skipped")
@@ -160,7 +183,7 @@ class DotfilesRevertTask(Task):
         last: Path | None = None
         while True:
             candidate = target.with_name(f"{target.name}.backup.{index}")
-            if candidate.exists():
+            if candidate.exists() or candidate.is_symlink():
                 last = candidate
                 index += 1
             else:

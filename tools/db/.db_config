@@ -8,8 +8,8 @@
 
 # local postgres connection
 local_db() {
-    local url ="postgres://pguser:pgpass@localhost:9001/postgres"
-    psql "$url"
+  local url="postgres://pguser:pgpass@0.0.0.0:9001/postgres"
+  psql "$url"
 }
 
 # Remote Database connection functions

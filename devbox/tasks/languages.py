@@ -16,8 +16,6 @@ class LanguagesTask(Task):
     name = "languages"
 
     def run(self, ctx: Context) -> None:
-        if ctx.enabled("python_pyenv"):
-            self.install_pyenv(ctx)
         if ctx.enabled("golang"):
             self.install_go(ctx)
         if ctx.enabled("rust"):
@@ -32,14 +30,6 @@ class LanguagesTask(Task):
             self.install_google_cloud_sdk(ctx)
         if ctx.enabled("bigdata"):
             self.install_bigdata(ctx)
-
-    def install_pyenv(self, ctx: Context) -> None:
-        pyenv_root = Path.home() / ".pyenv"
-        if not pyenv_root.exists():
-            run("curl -fsSL https://pyenv.run | bash", shell=True)
-
-        # NOTE:
-        # Add pyenv initialization to dotfiles/zsh/.zshrc.
 
     def install_go(self, ctx: Context) -> None:
         data = fetch_json("https://go.dev/dl/?mode=json")

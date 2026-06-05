@@ -126,6 +126,29 @@ require("lazy").setup({
     end,
   },
 
+  -- Git Review
+  {
+    'lewis6991/gitsigns.nvim',
+    event = { 'BufReadPre', 'BufNewFile' },
+    opts = {},
+    keys = {
+      { ']h', '<cmd>Gitsigns next_hunk<CR>', desc = 'Next hunk' },
+      { '[h', '<cmd>Gitsigns prev_hunk<CR>', desc = 'Previous hunk' },
+      { '<leader>gp', '<cmd>Gitsigns preview_hunk<CR>', desc = 'Preview hunk' },
+      { '<leader>gs', '<cmd>Gitsigns stage_hunk<CR>', desc = 'Stage hunk' },
+      { '<leader>gb', '<cmd>Gitsigns blame_line<CR>', desc = 'Blame line' },
+    },
+  },
+  {
+    'sindrets/diffview.nvim',
+    cmd = { 'DiffviewOpen', 'DiffviewFileHistory' },
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    keys = {
+      { '<leader>go', '<cmd>DiffviewOpen main...HEAD<CR>', desc = 'Open branch diff' },
+      { '<leader>gh', '<cmd>DiffviewFileHistory %<CR>', desc = 'File history' },
+    },
+  },
+
   -- LSP
   {
     "neovim/nvim-lspconfig",
@@ -155,7 +178,10 @@ require("lazy").setup({
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       require('mason-tool-installer').setup({
-        ensure_installed = { 'gopls', 'pyright', 'sqlls', 'bashls', 'gofumpt', 'black', 'isort', 'shfmt' }
+        ensure_installed = {
+          'gopls', 'pyright', 'ts_ls', 'sqlls', 'bashls',
+          'gofumpt', 'black', 'isort', 'shfmt'
+        }
       })
 
       require('mason-lspconfig').setup({
@@ -211,8 +237,8 @@ require("lazy").setup({
 
     -- Install parsers (replaces ensure_installed)
     require('nvim-treesitter').install({
-      'go', 'python', 'sql', 'bash',
-      'lua', 'markdown', 'markdown_inline'
+      'go', 'python', 'javascript', 'typescript', 'tsx',
+      'sql', 'bash', 'lua', 'markdown', 'markdown_inline'
     })
 
     -- Enable highlighting and indentation
@@ -357,9 +383,8 @@ map('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnostic' })
 map('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
 map('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Show diagnostic' })
 
--- Git
-map('n', '<leader>gp', '<cmd>Gitsigns preview_hunk<CR>', { desc = 'Preview hunk' })
-map('n', '<leader>gb', '<cmd>Gitsigns blame_line<CR>', { desc = 'Blame' })
+-- Review
+map('n', '<leader>md', '<cmd>RenderMarkdown toggle<CR>', { desc = 'Toggle markdown render' })
 
 -- Autocommands
 vim.api.nvim_create_autocmd('TextYankPost', {

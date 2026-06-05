@@ -3,19 +3,12 @@
   //                      TELEMETRY
   // =========================================================
   "telemetry.telemetryLevel": "off",
+
   // =========================================================
   //                WORKSPACE SAFETY (PRO DEFAULT)
   // =========================================================
   "security.workspace.trust.untrustedFiles": "open",
-  // =========================================================
-  //                    AI - Copilot
-  // =========================================================
-  // In VS Code settings.json — pick one:
-  // Option A: Use Copilot for inline, Continue for chat
-  "continue.enableTabAutocomplete": true,
 
-  // Option B: Use Continue for inline, disable Copilot inline
-  // "github.copilot.enable": { "*": false },
   // =========================================================
   //                    EDITOR (GLOBAL)
   // =========================================================
@@ -70,6 +63,7 @@
       "functions": "#DCDCAA"
     }
   },
+
   // =========================================================
   //                         WORKBENCH
   // =========================================================
@@ -78,7 +72,10 @@
   "terminal.integrated.cursorStyle": "underline",
   "terminal.integrated.cursorWidth": 2,
   "editor.semanticHighlighting.enabled": false,
-  "terminal.integrated.defaultLocation": "editor",
+  "terminal.integrated.fontFamily": "monospace",
+  "update.mode": "manual",
+  "editor.minimap.enabled": false,
+
   // =========================================================
   //                         FILES
   // =========================================================
@@ -89,6 +86,7 @@
   "explorer.confirmDelete": true,
   "explorer.confirmDragAndDrop": false,
   "explorer.compactFolders": false,
+
   // =========================================================
   //              EXCLUDES (PERF + SIGNAL/NOISE)
   // =========================================================
@@ -126,6 +124,7 @@
     "**/node_modules/*/**": true,
     "**/.venv/**": true
   },
+
   // =========================================================
   //                         GIT (BUILT-IN)
   // =========================================================
@@ -138,6 +137,8 @@
   "git.blame.statusBarItem.enabled": true,
   "git.blame.editorDecoration.enabled": false,
   "git.blame.ignoreWhitespace": true,
+  "githubPullRequests.pullBranch": "never",
+
   // =========================================================
   //                         GOLANG
   // =========================================================
@@ -169,21 +170,51 @@
       "ST1000": false // Don't complain about package comments not being in the right format
     }
   },
+
+  // =========================================================
+  //                         PYTHON
+  // =========================================================
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-  "jupyter.askForKernelRestart": false,
-  "jupyter.interactiveWindow.creationMode": "perFile",
   "python.terminal.activateEnvironment": true,
   "python.terminal.activateEnvInCurrentTerminal": true,
+  "python.createEnvironment.trigger": "off",
+
+  // --- Pylance / type analysis ---
   "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.diagnosticMode": "openFilesOnly",
+  "python.analysis.indexing": true,
+  "python.analysis.userFileIndexingLimit": 2000,
   "python.analysis.autoImportCompletions": true,
-  "python.analysis.inlayHints.functionReturnTypes": true,
-  "python.analysis.inlayHints.variableTypes": false,
+  "python.analysis.useLibraryCodeForTypes": true,
   "python.analysis.autoFormatStrings": true,
   "python.analysis.completeFunctionParens": true,
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.variableTypes": false,
+  "python.analysis.exclude": [
+    "**/.*",
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.venv",
+    "**/venv",
+    "**/.git",
+    "**/.mypy_cache",
+    "**/.pytest_cache",
+    "**/.ruff_cache",
+    "**/build",
+    "**/dist"
+  ],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingTypeStubs": "none",
+    "reportPrivateImportUsage": "none"
+  },
+
+  // --- Testing ---
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
-  "python.testing.nosetestsEnabled": false,
+  "python.testing.pytestArgs": ["-v"],
   "python.testing.autoTestDiscoverOnSaveEnabled": true,
+
+  // --- Ruff (formatting + linting) ---
   "ruff.enable": true,
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
@@ -195,22 +226,38 @@
     "editor.tabSize": 4,
     "editor.insertSpaces": true
   },
+  "[requirements]": {
+    "editor.formatOnSave": false
+  },
+
+  // --- Jupyter / notebooks ---
+  "jupyter.askForKernelRestart": false,
+  "jupyter.interactiveWindow.creationMode": "perFile",
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+  "jupyter.enableExtendedKernelCompletions": true,
   "notebook.formatOnSave.enabled": true,
   "notebook.codeActionsOnSave": {
     "notebook.source.fixAll.ruff": "explicit",
     "notebook.source.organizeImports.ruff": "explicit"
   },
-  "[requirements]": {
-    "editor.formatOnSave": false
-  },
+
   // =========================================================
   //                     MARKDOWN (BLOGGING)
   // =========================================================
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
-    "editor.wordWrap": "on"
+    "editor.wordWrap": "on",
+    "preview.fontSize": 14,
+    "preview.lineHeight": 1.6,
+    "preview.scrollPreviewWithEditor": true,
+    "preview.scrollEditorWithPreview": true,
+    "preview.markEditorSelection": true
   },
+  "workbench.editorAssociations": {
+    "*.md": "vscode.markdown.preview.editor"
+  },
+
   "prettier.proseWrap": "always",
   "prettier.printWidth": 80,
   "markdownlint.run": "onSave",
@@ -218,6 +265,12 @@
     "MD013": false,
     "MD033": false
   },
+
+  // JSON formatting
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
   // =========================================================
   //                     SQL Formatting
   // =========================================================
@@ -227,9 +280,11 @@
   },
   "sql-formatter.dialect": "sql",
   "sql-formatter.uppercase": true,
+
   // =========================================================
-  //               REACT / TYPESCRIPT (ENABLED)
+  //                     JAVASCRIPT / TYPESCRIPT
   // =========================================================
+  // formatting
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
@@ -246,22 +301,144 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
+
+  // settings
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.suggest.completeFunctionCalls": true,
+  "javascript.suggest.completeFunctionCalls": true,
+  "typescript.inlayHints.parameterNames.enabled": "literals",
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "typescript.inlayHints.parameterTypes.enabled": false,
+  "typescript.inlayHints.variableTypes.enabled": false,
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "eslint.run": "onType",
+  "eslint.format.enable": false,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.useFlatConfig": true,
+  "npm.packageManager": "auto",
+  "debug.javascript.autoAttachFilter": "smart",
+  "debug.node.autoAttach": "on",
+
   // =========================================================
   //                        RUST
   // =========================================================
-  "rust-analyzer.check.command": "clippy",
   "[rust]": {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.tabSize": 4
   },
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.check.allTargets": true,
+  "rust-analyzer.cargo.features": "all",
+  "rust-analyzer.imports.granularity.group": "module",
+  "rust-analyzer.imports.prefix": "crate",
+  "rust-analyzer.inlayHints.bindingModeHints.enable": false,
+  "rust-analyzer.inlayHints.chainingHints.enable": true,
+  "rust-analyzer.inlayHints.closingBraceHints.minLines": 25,
+  "rust-analyzer.inlayHints.parameterHints.enable": true,
+  "rust-analyzer.inlayHints.typeHints.enable": true,
+  "rust-analyzer.inlayHints.lifetimeElisionHints.enable": "skip_trivial",
+  "rust-analyzer.lens.references.method.enable": true,
+  "rust-analyzer.lens.implementations.enable": true,
+  "rust-analyzer.completion.callable.snippets": "fill_arguments",
+  "rust-analyzer.cargo.buildScripts.enable": true,
+  "rust-analyzer.procMacro.enable": true,
+  "rust-analyzer.diagnostics.experimental.enable": false,
+
+  // =========================================================
+  //                        C/C++
+  // =========================================================
+  "[c]": {
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
   },
-  "githubPullRequests.pullBranch": "never",
-  "python.createEnvironment.trigger": "off",
-  "terminal.integrated.fontFamily": "monospace",
-  "update.mode": "manual",
-  "editor.minimap.enabled": false,
-  "workbench.iconTheme": "material-icon-theme",
-  "chat.viewSessions.orientation": "stacked"
+  "[cpp]": {
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "clangd.arguments": [
+    "--background-index",
+    "--clang-tidy",
+    "--header-insertion=iwyu",
+    "--completion-style=detailed",
+    "--function-arg-placeholders",
+    "--pch-storage=memory",
+    "--log=error"
+  ],
+  "clangd.checkUpdates": true,
+  "clangd.onConfigChanged": "restart",
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "cmake.configureOnOpen": true,
+  "cmake.buildDirectory": "${workspaceFolder}/build",
+  "cmake.exportCompileCommandsFile": true,
+  "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
+
+  /*
+    Add ~/.config/clangd/config.yaml
+    CompileFlags:
+      Add:
+        - -std=c++20
+        - -Wall
+        - -Wextra
+    Diagnostics:
+      ClangTidy:
+        Add:
+          - modernize-*
+          - performance-*
+          - readability-*
+        Remove:
+          - modernize-use-trailing-return-type
+          - readability-magic-numbers
+          - readability-identifier-length
+  */
+
+  // =========================================================
+  //                    AI - Copilot
+  // =========================================================
+  "github.copilot.enable": {
+    "*": true
+  },
+
+  // Instructions: AGENTS.md or any *.instructions.md files
+  "chat.instructionsFilesLocations": {
+    "~/.vs-agents": true
+  },
+
+  // Skills (folders containing SKILL.md)
+  "chat.agentSkillsLocations": {
+    "~/.vs-agents/skills": true
+  },
+
+  // Custom agents (*.agent.md files)
+  "chat.agentFilesLocations": {
+    "~/.vs-agents/agents": true
+  },
+
+  // Enable the various features
+  "chat.useAgentSkills": true,
+  "chat.useHooks": true,
+  "chat.mcp.discovery.enabled": {},
+  "chat.math.enabled": false,
+  "chat.tools.terminal.autoApprove": {
+    "cp": true,
+    "go": true,
+    "gofmt": true,
+    "docker-compose": true
+  },
+  "chat.agent.maxRequests": 500,
+  "application.shellEnvironmentResolutionTimeout": 50,
+  "chat.viewSessions.orientation": "stacked",
+  "workbench.colorTheme": "Kanagawa Dragon",
+  "workbench.iconTheme": "material-icon-theme"
 }

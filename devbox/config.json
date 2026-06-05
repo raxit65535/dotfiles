@@ -5,7 +5,6 @@
   "install": {
     "git": true,
     "oh_my_zsh": true,
-    "python_pyenv": true,
     "golang": true,
     "rust": true,
     "nodejs": true,
@@ -63,6 +62,24 @@
       "profiles": ["global", "work"]
     },
     {
+      "name": "cop_script",
+      "source": "tmux/cop.sh",
+      "target": "~/.local/bin/cop",
+      "profiles": ["global", "work"]
+    },
+    {
+      "name": "uncop_script",
+      "source": "tmux/uncop.sh",
+      "target": "~/.local/bin/uncop",
+      "profiles": ["global", "work"]
+    },
+    {
+      "name": "feature_open_script",
+      "source": "tmux/feature-open.sh",
+      "target": "~/.local/bin/feature-open",
+      "profiles": ["global", "work"]
+    },
+    {
       "name": "nvim_config",
       "source": "nvim",
       "target": "~/.config/nvim",
@@ -109,7 +126,7 @@
     {
       "name": "gitconfig-work",
       "source": "work/.gitconfig-work",
-      "target": "~/.gitconfig-shipt",
+      "target": "~/.gitconfig-work",
       "profiles": ["work"]
     },
     {
