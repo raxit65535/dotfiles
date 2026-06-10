@@ -1,5 +1,50 @@
 #!/usr/bin/env bash
 # cop - manage tmux AI workspaces for feature worktrees.
+#
+# Purpose:
+# - create or reuse a four-window tmux session for a repo or linked worktree
+# - keep the session path in tmux metadata for later inspection and cleanup
+#
+# Commands:
+# - `open` creates or reuses the managed session
+# - `attach` joins an existing managed session
+# - `info` prints repo, branch, path, and window metadata
+# - `list` shows all sessions created by this script
+# - `doctor` validates the stored path and git/worktree state
+#
+# Workflow fit:
+# - use this after `feature-open` when a feature needs a long-running tmux home
+# - `agent` is for implementation, `review` is for diff/log inspection,
+#   `shell` is for ad hoc commands, and `watch` is for tests or logs
+# - reuse the same session while iterating on commits, PR text, review fixes,
+#   or CI follow-up work inside the same worktree
+#
+# Path behavior:
+# - use an explicit path when you want predictable automation
+# - use `cop open <session> .` to target the current directory explicitly
+# - use `cop open <session>` from inside a repo or linked worktree to infer PWD
+# - outside a repo, omission falls back to `$HOME/code/<session>`
+#
+# Common examples:
+#   cop open my-feature /abs/path/to/worktree
+#   cop open my-feature .
+#   cd /abs/path/to/worktree && cop open my-feature
+#   cop attach my-feature
+#   cop info my-feature
+#   cop list
+#   cop doctor my-feature
+#
+# Workflow examples:
+#   cd /abs/path/to/worktree && cop open my-feature
+#   cop open my-feature /abs/path/to/worktree --no-attach
+#   cop info my-feature && cop doctor my-feature
+#
+# Manual command equivalents:
+#   tmux new-session -d -s my-feature -c .worktrees/my-feature -n agent
+#   tmux new-window -t my-feature -n review -c .worktrees/my-feature
+#   tmux new-window -t my-feature -n shell -c .worktrees/my-feature
+#   tmux new-window -t my-feature -n watch -c .worktrees/my-feature
+#   tmux attach-session -t my-feature
 
 set -euo pipefail
 
@@ -26,6 +71,33 @@ Subcommands:
 
 Options:
   --no-attach  Create or reuse the session without attaching (useful for tests/automation)
+
+Path behavior:
+	When [path] is provided, cop uses it directly.
+	When [path] is omitted, cop uses the current directory if it is inside a git
+	repo or linked worktree. Otherwise it falls back to $HOME/code/<session>.
+
+Examples:
+	cop open my-feature /abs/path/to/worktree
+	cop open my-feature .
+	cd /abs/path/to/worktree && cop open my-feature
+	cop open my-feature --no-attach
+	cop attach my-feature
+	cop info my-feature
+	cop list
+	cop doctor my-feature
+
+Workflow examples:
+	cd /abs/path/to/worktree && cop open my-feature
+	cop open my-feature /abs/path/to/worktree --no-attach
+	cop info my-feature && cop doctor my-feature
+
+Manual command equivalents:
+	tmux new-session -d -s my-feature -c .worktrees/my-feature -n agent
+	tmux new-window -t my-feature -n review -c .worktrees/my-feature
+	tmux new-window -t my-feature -n shell -c .worktrees/my-feature
+	tmux new-window -t my-feature -n watch -c .worktrees/my-feature
+	tmux attach-session -t my-feature
 EOF
 }
 
@@ -39,6 +111,19 @@ canonical_dir() {
 		cd "$1" >/dev/null 2>&1
 		pwd -P
 	)
+}
+
+default_open_path() {
+	local session_name=$1
+
+	# Prefer the current directory when the command is already being run from the
+	# repo or linked worktree the session should manage.
+	if git -C "$PWD" rev-parse --show-toplevel >/dev/null 2>&1; then
+		printf '%s\n' "$PWD"
+		return 0
+	fi
+
+	printf '%s\n' "$HOME/code/$session_name"
 }
 
 ensure_tmux() {
@@ -172,7 +257,7 @@ open_session() {
 	local attach_after=${3:-1}
 	local repo_path
 
-	repo_path=${requested_path:-"$HOME/code/$session_name"}
+	repo_path=${requested_path:-$(default_open_path "$session_name")}
 	[[ -d "$repo_path" ]] || die "path does not exist: $repo_path"
 	repo_path=$(canonical_dir "$repo_path")
 

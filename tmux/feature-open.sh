@@ -1,13 +1,42 @@
 #!/usr/bin/env bash
-# feature-open <repo> <feature> [--ide code|idea] [--base <branch>] [--no-ide] [--print-path]
-# Creates or reuses a feature worktree and optionally opens it in an IDE.
+# feature-open - create or reuse a per-feature git worktree.
+#
+# Purpose:
+# - run from inside a git repo and create/reuse a feature worktree
+# - create or reuse `<repo>/.worktrees/<feature>`
+# - optionally open the worktree in VS Code or IntelliJ
+# - print the next `cop open ...` command for long-running tmux work
+#
+# Workflow fit:
+# - use this when the repo is already open in VS Code and you want a dedicated
+#   worktree for a new feature request or bugfix
+# - use the printed `cop open ...` command when the feature needs a long-lived
+#   tmux execution context for AI-assisted implementation or review
+# - use `uncop cleanup <session> --worktree` after the branch is merged or the
+#   worktree is no longer needed
+#
+# Common examples:
+#   feature-open my-feature
+#   feature-open team/my-feature --no-ide
+#   feature-open my-feature --ide idea
+#   feature-open my-feature --print-path
+#
+# Workflow examples:
+#   cd ~/.dotfiles && feature-open my-feature
+#   feature-open my-feature && cop open dotfiles-my-feature .worktrees/my-feature
+#
+# Manual command equivalents:
+#   git -C . rev-parse --show-toplevel
+#   mkdir -p .worktrees
+#   git worktree add -b my-feature .worktrees/my-feature master
+#   code .worktrees/my-feature
 
 set -euo pipefail
 
 usage() {
 	cat <<'EOF'
 Usage:
-  feature-open <repo> <feature> [--ide code|idea] [--base <branch>] [--no-ide] [--print-path]
+	feature-open <feature> [--ide code|idea] [--base <branch>] [--no-ide] [--print-path]
   feature-open --help
 
 Options:
@@ -18,9 +47,24 @@ Options:
   -h, --help          Show this help text
 
 Environment:
-  WORKSPACE_ROOT          Root directory to search for repos (default: $HOME/workspace)
   FEATURE_BASE_BRANCH     Default base branch name
   FEATURE_OPEN_SKIP_IDE   Legacy escape hatch; equivalent to --no-ide for automation
+
+Examples:
+	feature-open my-feature
+	feature-open team/my-feature --no-ide
+	feature-open my-feature --ide idea
+	feature-open my-feature --print-path
+
+Workflow examples:
+	cd ~/.dotfiles && feature-open my-feature
+	feature-open my-feature && cop open dotfiles-my-feature .worktrees/my-feature
+
+Manual command equivalents:
+	git -C . rev-parse --show-toplevel
+	mkdir -p .worktrees
+	git worktree add -b my-feature .worktrees/my-feature master
+	code .worktrees/my-feature
 EOF
 }
 
@@ -36,17 +80,11 @@ canonical_dir() {
 	)
 }
 
-resolve_joined_path() {
-	# Use Python for robust path joining + normalization without shell escaping
-	# pitfalls when feature names contain path separators.
-	python3 - "$1" "$2" <<'PY'
-import os
-import sys
-
-base = sys.argv[1]
-relative = sys.argv[2]
-print(os.path.realpath(os.path.join(base, relative)))
-PY
+repo_root_from_cwd() {
+	local top_level
+	top_level=$(git -C "$PWD" rev-parse --show-toplevel 2>/dev/null || true)
+	[[ -n "$top_level" ]] || die "feature-open must be run from inside a git repository"
+	canonical_dir "$top_level"
 }
 
 ensure_valid_feature_name() {
@@ -136,42 +174,25 @@ while [[ $# -gt 0 ]]; do
 	esac
 done
 
-[[ ${#POSITIONAL[@]} -ge 2 ]] || {
+[[ ${#POSITIONAL[@]} -ge 1 ]] || {
 	usage >&2
 	exit 1
 }
 
-REPO_NAME=${POSITIONAL[0]}
-FEATURE_NAME=${POSITIONAL[1]}
-WORKSPACE_ROOT=${WORKSPACE_ROOT:-"$HOME/workspace"}
+FEATURE_NAME=${POSITIONAL[0]}
 
 if [[ ${FEATURE_OPEN_SKIP_IDE:-0} == "1" ]]; then
 	OPEN_IDE=0
 fi
 
-[[ -d "$WORKSPACE_ROOT" ]] || die "Workspace root does not exist: $WORKSPACE_ROOT"
 ensure_valid_feature_name "$FEATURE_NAME"
 
-REPO_PATH=""
-# Find an actual repository root (not a nested folder) that matches the
-# requested name and ignore existing .worktrees directories.
-while IFS= read -r candidate; do
-	[[ -n "$candidate" ]] || continue
-	git -C "$candidate" rev-parse --show-toplevel >/dev/null 2>&1 || continue
-	candidate_path=$(canonical_dir "$candidate")
-	top_level=$(git -C "$candidate" rev-parse --show-toplevel 2>/dev/null || true)
-	if [[ -n "$top_level" && "$(canonical_dir "$top_level")" == "$candidate_path" ]]; then
-		REPO_PATH=$candidate_path
-		break
-	fi
-done < <(find "$WORKSPACE_ROOT" -maxdepth 4 -type d -name "$REPO_NAME" ! -path '*/.worktrees/*' | sort)
-
-[[ -n "$REPO_PATH" ]] || die "Could not find repo '$REPO_NAME' under $WORKSPACE_ROOT"
+REPO_PATH=$(repo_root_from_cwd)
 
 WORKTREE_ROOT="$REPO_PATH/.worktrees"
 mkdir -p "$WORKTREE_ROOT"
 WORKTREE_ROOT=$(canonical_dir "$WORKTREE_ROOT")
-WORKTREE_PATH=$(resolve_joined_path "$WORKTREE_ROOT" "$FEATURE_NAME")
+WORKTREE_PATH="$WORKTREE_ROOT/$FEATURE_NAME"
 ensure_within_worktree_root "$WORKTREE_ROOT" "$WORKTREE_PATH"
 mkdir -p "$(dirname "$WORKTREE_PATH")"
 

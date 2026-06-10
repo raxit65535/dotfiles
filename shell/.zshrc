@@ -112,6 +112,14 @@ if [[ -f "$HOME/.db_config" ]]; then
   source "$HOME/.db_config"
 fi
 
+if [[ -f "$HOME/.snow.zsh" ]]; then
+  source "$HOME/.snow.zsh"
+fi
+
+if [[ -f "$HOME/.work_dwh" ]]; then
+  source "$HOME/.work_dwh"
+fi
+
 if [[ -f "$HOME/.kafka_config" ]]; then
   source "$HOME/.kafka_config"
 fi

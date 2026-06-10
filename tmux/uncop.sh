@@ -1,5 +1,43 @@
 #!/usr/bin/env bash
 # uncop - inspect, stop, and optionally clean up cop-managed tmux sessions.
+#
+# Purpose:
+# - inspect a `cop` session before cleanup
+# - kill the tmux session only when you want to keep the worktree around
+# - kill the tmux session and remove the linked worktree after merge or abandonment
+# - preserve safety checks so only linked worktrees are deleted
+#
+# Commands:
+# - `info` shows the stored path plus repo/worktree metadata
+# - `kill` removes only the tmux session
+# - `cleanup` removes the tmux session and can also remove the linked worktree
+#
+# Workflow fit:
+# - use `info` before cleanup if you want to confirm the stored path and branch
+# - use `kill` when tmux is no longer needed but the worktree should stay open
+# - use `cleanup --worktree` after merge, abandonment, or branch replacement
+# - this script intentionally refuses to remove the main checkout
+#
+# Cleanup behavior:
+# - prefer `kill` while work is still active but tmux is no longer needed
+# - prefer `cleanup --worktree` after merge, abandonment, or branch replacement
+# - linked-worktree validation protects the main checkout from accidental removal
+#
+# Common examples:
+#   uncop info my-feature
+#   uncop kill my-feature --force
+#   uncop cleanup my-feature
+#   uncop cleanup my-feature --worktree
+#
+# Workflow examples:
+#   uncop info my-feature
+#   uncop kill my-feature --force
+#   uncop cleanup my-feature --worktree
+#
+# Manual command equivalents:
+#   tmux kill-session -t my-feature
+#   git worktree remove .worktrees/my-feature --force
+#   git branch -d my-feature
 
 set -euo pipefail
 
@@ -21,6 +59,27 @@ Subcommands:
 Options:
   --worktree  Also remove the linked worktree after validation
   --force     Skip interactive confirmation prompts
+
+Examples:
+	uncop info my-feature
+	uncop kill my-feature --force
+	uncop cleanup my-feature
+	uncop cleanup my-feature --worktree
+
+Workflow examples:
+	uncop info my-feature
+	uncop kill my-feature --force
+	uncop cleanup my-feature --worktree
+
+Manual command equivalents:
+	tmux kill-session -t my-feature
+	git worktree remove .worktrees/my-feature --force
+	git branch -d my-feature
+
+Workflow note:
+	Use `uncop cleanup <session> --worktree` after the branch is merged or the
+	worktree is no longer needed. Use `uncop kill <session>` when you want to
+	close tmux but keep the worktree on disk.
 EOF
 }
 
@@ -204,6 +263,8 @@ cleanup_session() {
 		}
 		git -C "$session_path" worktree remove "$session_path" --force
 		echo "Worktree at $session_path removed."
+	else
+		echo "Linked worktree not requested for removal."
 	fi
 }
 

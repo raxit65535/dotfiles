@@ -103,12 +103,21 @@ symlink-nvim:
 symlink-tmux:
 	rm -f ~/.tmux.conf
 	ln -s $(ROOT)/tmux/.tmux.conf ~/.tmux.conf
+	ln -s $(ROOT)/tmux/cop.sh ~/.local/bin/cop
+	ln -s $(ROOT)/tmux/uncop.sh ~/.local/bin/uncop
+	ln -s $(ROOT)/tmux/feature-open.sh ~/.local/bin/feature-open
 
 symlink-db:
 	rm -f ~/.db_config ~/.psqlrc ~/.usqlrc
 	ln -s $(ROOT)/tools/db/.db_config ~/.db_config
 	ln -s $(ROOT)/tools/db/.psqlrc ~/.psqlrc
 	ln -s $(ROOT)/tools/db/.usqlrc ~/.usqlrc
+
+symlink-snowflake:
+	rm -f ~/.snow.zsh
+	ln -s $(ROOT)/tools/snow/snow.zsh ~/.snow.zsh
+# just in case I need to setup default snowflake session params (warehouse, database, schema, etc.) for the snow CLI tool
+# ln -s $(ROOT)/tools/snow/init.sql ~/.config/snow/init.sql
 
 symlink-kafka:
 	rm -f ~/.kafka_config ~/.work_kafka_config
@@ -121,6 +130,7 @@ symlink-work:
 	mkdir -p ~/.snowflake
 	ln -s $(ROOT)/work/.work_db_config ~/.work_db_config
 	ln -s $(ROOT)/work/.sf_connection.toml ~/.snowflake/connections.toml
+	ln -s $(ROOT)/work/.work_zshrc ~/.work_zshrc
 
 symlink-vs-agents:
 	rm -f ~/.vs-agents

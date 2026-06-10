@@ -37,7 +37,7 @@ _pg_token() {
 
   local token
   token="$(gcloud sql generate-login-token)" || return 1
-  printf '%s' "$token" > "$cache"
+  ( umask 0177; printf '%s' "$token" > "$cache" )
   printf '%s' "$token"
 }
 
